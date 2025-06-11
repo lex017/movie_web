@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/main.css">
+  <title>Booking Page</title>
+  
+</head>
+<body>
+
+<!-- SIDEBAR -->
+    <section id="sidebar">
+        <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
+        <ul class="side-menu">
+            <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
+            <li class="divider" data-text="Movies Management">Movies Management</li>
+            <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
+            <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
+            <li><a href="showtimes.html"><i class='bx bxs-time icon'></i> Showtimes</a></li>
+            <li><a href="bookings.html"><i class="fa-solid fa-clock-rotate-left icon"></i> Bookings</a></li>
+            <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
+        </ul>
+    </section>
+    <!-- SIDEBAR -->
+
+  <!-- MAIN CONTENT -->
+  <section id="content">
+    <main>
+      <h1 class="title">Book Your Ticket</h1>
+
+      <!-- Booking Form -->
+      <form id="bookingForm">
+        <div class="form-group">
+          <label for="movieSelect">Select Movie:</label>
+          <select id="movieSelect" required>
+            <option value="">--Select a Movie--</option>
+            <option value="Movie 1">Movie 1</option>
+            <option value="Movie 2">Movie 2</option>
+            <option value="Movie 3">Movie 3</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="showtimeSelect">Select Showtime:</label>
+          <select id="showtimeSelect" required>
+            <option value="">--Select a Showtime--</option>
+            <option value="10:00 AM">10:00 AM</option>
+            <option value="1:00 PM">1:00 PM</option>
+            <option value="4:00 PM">4:00 PM</option>
+            <option value="7:00 PM">7:00 PM</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Your Name:</label>
+          <input type="text" id="name" required />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Your Email:</label>
+          <input type="email" id="email" required />
+        </div>
+
+        <button type="submit">Book Now</button>
+      </form>
+
+      <!-- Booking List Table -->
+      <div class="tablecontainer">
+        <h2>Booking List</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Movie</th>
+              <th>Showtime</th>
+              <th>Name</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody id="bookingList">
+            <!-- Demo data rows will be injected here -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </section>
+
+  <script>
+    const form = document.getElementById('bookingForm');
+    const bookingList = document.getElementById('bookingList');
+
+    // Handle Form Submission
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const movie = document.getElementById('movieSelect').value;
+      const showtime = document.getElementById('showtimeSelect').value;
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+
+      const newRow = `
+        <tr>
+          <td>${movie}</td>
+          <td>${showtime}</td>
+          <td>${name}</td>
+          <td>${email}</td>
+        </tr>
+      `;
+      bookingList.innerHTML += newRow;
+      form.reset();
+    });
+
+    // Demo Data
+    const demoBookings = [
+      {
+        movie: 'Movie 1',
+        showtime: '10:00 AM',
+        name: 'Alice Johnson',
+        email: 'alice@example.com'
+      },
+      {
+        movie: 'Movie 2',
+        showtime: '1:00 PM',
+        name: 'Bob Smith',
+        email: 'bob@example.com'
+      },
+      {
+        movie: 'Movie 3',
+        showtime: '4:00 PM',
+        name: 'Charlie Lee',
+        email: 'tim@example.com'
+      }
+    ];
+
+    // Load demo data on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      demoBookings.forEach(booking => {
+        const row = `
+          <tr>
+            <td>${booking.movie}</td>
+            <td>${booking.showtime}</td>
+            <td>${booking.name}</td>
+            <td>${booking.email}</td>
+          </tr>
+        `;
+        bookingList.innerHTML += row;
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Showtimes Management</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/main.css" />
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+    <section id="sidebar">
+        <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
+        <ul class="side-menu">
+            <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
+            <li class="divider" data-text="Movies Management">Movies Management</li>
+            <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
+            <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
+            <li><a href="showtimes.html"><i class='bx bxs-time icon'></i> Showtimes</a></li>
+            <li><a href="bookings.html"><i class="fa-solid fa-clock-rotate-left icon"></i> Bookings</a></li>
+            <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
+        </ul>
+    </section>
+    <!-- SIDEBAR -->
+
+    <!-- CONTENT -->
+    <section id="content">
+        <nav>
+            <i class='bx bx-menu toggle-sidebar'></i>
+            <span class="title">Showtimes</span>
+        </nav>
+
+        <main>
+            <h1 class="title">Manage Showtimes</h1>
+
+            <!-- Add Showtime Form -->
+            <form id="addShowtimeForm">
+                <div>
+                    <label for="movieTitle">Movie Title:</label>
+                    <input type="text" id="movieTitle" required />
+                </div>
+                <div>
+                    <label for="theater">Theater:</label>
+                    <input type="text" id="theater" required />
+                </div>
+                <div>
+                    <label for="showDate">Date:</label>
+                    <input type="date" id="showDate" required />
+                </div>
+                <div>
+                    <label for="showTime">Time:</label>
+                    <input type="time" id="showTime" required />
+                </div>
+                <button type="submit">Add Showtime</button>
+            </form>
+
+            <!-- Showtime List Table -->
+            <div class="tablecontainer">
+                <h2>All Showtimes</h2>
+                <table id="showtimesTable">
+                    <thead>
+                        <tr>
+                            <th>Movie Title</th>
+                            <th>Theater</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Demo data will appear here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </section>
+
+    <!-- Custom Script with Demo Data Only -->
+    <script>
+        const showtimesTable = document.getElementById("showtimesTable").querySelector("tbody");
+        const form = document.getElementById("addShowtimeForm");
+
+        // Local demo data array
+        let demoShowtimes = [
+            { title: "Avengers: Endgame", theater: "Hall 1", date: "2025-06-15", time: "18:30" },
+            { title: "Inception", theater: "Hall 2", date: "2025-06-16", time: "20:00" },
+            { title: "Frozen II", theater: "Hall 3", date: "2025-06-17", time: "16:00" }
+        ];
+
+        function loadShowtimes() {
+            showtimesTable.innerHTML = "";
+            demoShowtimes.forEach((data, index) => {
+                const row = `
+                    <tr>
+                        <td>${data.title}</td>
+                        <td>${data.theater}</td>
+                        <td>${data.date}</td>
+                        <td>${data.time}</td>
+                        <td><button onclick="deleteShowtime(${index})">Delete</button></td>
+                    </tr>
+                `;
+                showtimesTable.innerHTML += row;
+            });
+        }
+
+        function deleteShowtime(index) {
+            demoShowtimes.splice(index, 1);
+            loadShowtimes();
+        }
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const title = document.getElementById("movieTitle").value;
+            const theater = document.getElementById("theater").value;
+            const date = document.getElementById("showDate").value;
+            const time = document.getElementById("showTime").value;
+
+            demoShowtimes.push({ title, theater, date, time });
+            form.reset();
+            loadShowtimes();
+        });
+
+        // Initial load
+        loadShowtimes();
+    </script>
+</body>
+
+</html>

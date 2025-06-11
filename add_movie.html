@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Movie - Theater Admin</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="main.css" />
+
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <section id="sidebar">
+    <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
+    <ul class="side-menu">
+      <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
+      <li class="divider" data-text="Movies Management">Movies Management</li>
+      <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
+      <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
+      <li><a href="showtimes.html"><i class='bx bxs-time icon'></i> Showtimes</a></li>
+      <li><a href="bookings.html"><i class="fa-solid fa-clock-rotate-left icon"></i> Bookings</a></li>
+      <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
+    </ul>
+  </section>
+  <!-- SIDEBAR -->
+
+  <section id="content" style="margin-left:270px;">
+    <nav>
+      <i class="bx bx-menu toggle-sidebar"></i>
+      <a href="#" class="nav-link">
+        <i class="bx bxs-bell icon"></i>
+        <span class="badge" id="notification-badge">0</span>
+      </a>
+      <a href="chat.html" class="nav-link">
+        <i class="bx bxs-message-square-dots icon"></i>
+        <span class="badge">8</span>
+      </a>
+      <span class="divider"></span>
+      <div class="profile">
+        <img
+          src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+          alt="" />
+        <ul class="profile-link">
+          <li><a href="#"><i class="bx bxs-user-circle icon"></i> Profile</a></li>
+          <li><a href="#"><i class="bx bxs-cog"></i> Settings</a></li>
+          <li><a href="login.html"><i class="bx bxs-log-out-circle"></i> Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main>
+      <h1 class="title">Add New Movie</h1>
+      <form id="addMovieForm" novalidate>
+        <div>
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" required placeholder="Movie title" />
+        </div>
+        <div>
+          <label for="genre">Genre</label>
+          <select id="genre" name="genre" required>
+            <option value="">Select genre</option>
+            <option>Action</option>
+            <option>Comedy</option>
+            <option>Drama</option>
+            <option>Horror</option>
+            <option>Sci-Fi</option>
+            <option>Romance</option>
+            <option>Animation</option>
+            <option>Thriller</option>
+            <option>Documentary</option>
+          </select>
+        </div>
+        <div>
+          <label for="theater">Theater</label>
+          <select id="theater" name="theater" required>
+            <option value="">Select theater</option>
+            <option value="theater1">Theater 1 </option>
+            <option value="theater2">Theater 2 </option>
+            <option value="theater3">Theater 3 </option>
+            <option value="theater4">Theater 4 </option>
+            <option value="theater5">Theater 5 </option>
+          </select>
+        </div>
+        <div>
+          <label for="releaseDate">Release Date</label>
+          <input type="date" id="releaseDate" name="releaseDate" required />
+        </div>
+
+        <div>
+          <label for="title">Description</label>
+          <input type="text" id="title" name="title" required placeholder="Movie Description" />
+        </div>
+        <div>
+          <label for="showtimes">Showtimes</label>
+          <input type="text" id="showtimes" name="showtimes" required placeholder="e.g. 12:00 PM, 3:30 PM" />
+        </div>
+
+        <button type="submit">Add Movie</button>
+      </form>
+
+      <div class="success-message" id="successMessage">Movie successfully added!</div>
+
+
+    </main>
+  </section>
+
+  <script src="/add_movie.js"></script>
