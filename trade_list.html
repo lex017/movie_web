@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reward List - Theater Admin</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/main.css" />
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0; top: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: rgba(0,0,0,0.50);
+      padding: 20px;
+      border-radius: 8px;
+      width: 400px;
+    }
+    .modal-content input,
+    .modal-content select {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+    }
+    .modal-content img {
+      max-width: 100px;
+      margin-bottom: 10px;
+    }
+    .modal-actions {
+      text-align: right;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- SIDEBAR -->
+  <section id="sidebar">
+    <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
+    <ul class="side-menu">
+      <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
+      <li class="divider" data-text="Movies Management">Movies Management</li>
+      <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
+      <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
+      <li><a href="showtimes.html"><i class='bx bxs-time icon'></i> Showtimes</a></li>
+      <li><a href="bookings.html"><i class="fa-solid fa-clock-rotate-left icon"></i> Bookings</a></li>
+      <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
+      <li><a href="trade_reward.html"><i class="fa-solid fa-ticket icon"></i> Add trade</a></li>
+      <li><a href="trade_list.html"><i class="fa-solid fa-ticket icon"></i> trade list</a></li>
+    </ul>
+  </section>
+
+  <!-- CONTENT -->
+  <section id="content" style="margin-left:270px;">
+    <main>
+      <h1 class="title">Reward List</h1>
+      <div class="tablecontainer">
+        <table id="rewardTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Type</th>
+              <th>Name</th>
+              <th>Image</th>
+              <th>Point</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </main>
+  </section>
+
+  <!-- MODAL -->
+  <div class="modal" id="editModal">
+    <div class="modal-content">
+      <h3>Edit Reward</h3>
+      <input type="hidden" id="editId">
+      <label>Type:</label>
+      <select id="editType">
+        <option value="Candy">Candy</option>
+        <option value="Drink">Drink</option>
+        <option value="Snack">Snack</option>
+      </select>
+      <label>Name:</label>
+      <input type="text" id="editName">
+      <label>Point:</label>
+      <input type="number" id="editPoint" min="0">
+      <label>Image Preview:</label>
+      <img id="editImagePreview" src="">
+      <label>New Image (optional):</label>
+      <input type="file" id="editImageInput" accept="image/*">
+      <div class="modal-actions">
+        <button onclick="closeModal()">Cancel</button>
+        <button onclick="saveEdit()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    const modal = document.getElementById('editModal');
+    const editId = document.getElementById('editId');
+    const editType = document.getElementById('editType');
+    const editName = document.getElementById('editName');
+    const editPoint = document.getElementById('editPoint');
+    const editImagePreview = document.getElementById('editImagePreview');
+    const editImageInput = document.getElementById('editImageInput');
+
+    function openModal(reward) {
+      modal.style.display = 'flex';
+      editId.value = reward.re_id;
+      editType.value = reward.re_type;
+      editName.value = reward.re_name;
+      editPoint.value = reward.r_point || 0;
+      editImagePreview.src = reward.image_reward;
+      editImageInput.value = '';
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    async function saveEdit() {
+      const id = editId.value;
+      const type = editType.value;
+      const name = editName.value;
+      const point = parseInt(editPoint.value) || 0;
+      let imageUrl = editImagePreview.src;
+
+      const file = editImageInput.files[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append("poster", file);
+        const uploadRes = await fetch("http://localhost:8000/uploadPoster", {
+          method: "POST",
+          body: formData
+        });
+        const uploadResult = await uploadRes.json();
+        if (uploadResult.url) {
+          imageUrl = uploadResult.url;
+        }
+      }
+
+      const updateRes = await fetch(`http://localhost:8000/reward/${id}`, {
+        method: "PUT",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          re_type: type,
+          re_name: name,
+          image_reward: imageUrl,
+          r_point: point
+        })
+      });
+
+      if (updateRes.ok) {
+        alert("✅ Reward updated!");
+        closeModal();
+        loadRewards();
+      } else {
+        alert("❌ Failed to update.");
+      }
+    }
+
+    async function deleteReward(id) {
+      if (!confirm("Are you sure?")) return;
+      const res = await fetch(`http://localhost:8000/reward/${id}`, {
+        method: "DELETE"
+      });
+      if (res.ok) {
+        loadRewards();
+      } else {
+        alert("❌ Failed to delete.");
+      }
+    }
+
+    async function loadRewards() {
+      const rewardTableBody = document.querySelector('#rewardTable tbody');
+      const res = await fetch("http://localhost:8000/reward");
+      const rewards = await res.json();
+
+      rewardTableBody.innerHTML = '';
+      rewards.forEach(re => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${re.re_id}</td>
+          <td>${re.re_type}</td>
+          <td>${re.re_name}</td>
+          <td><img src="${re.image_reward}" alt="${re.re_name}" style="width:80px;"></td>
+          <td>${re.r_point || 0}</td>
+          <td>
+            <button onclick='openModal(${JSON.stringify(re)})'>✏ Edit</button>
+            <button style="color:red;" onclick="deleteReward(${re.re_id})">🗑 Delete</button>
+          </td>
+        `;
+        rewardTableBody.appendChild(tr);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", loadRewards);
+  </script>
+</body>
+</html>

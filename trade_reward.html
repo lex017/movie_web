@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Candy - Admin</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+  <section id="sidebar">
+    <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
+    <ul class="side-menu">
+      <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
+      <li class="divider" data-text="Movies Management">Movies Management</li>
+      <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
+      <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
+      <li><a href="showtimes.html"><i class='bx bxs-time icon'></i> Showtimes</a></li>
+      <li><a href="bookings.html"><i class="fa-solid fa-clock-rotate-left icon"></i> Bookings</a></li>
+      <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
+      <li><a href="trade_reward.html"><i class="fa-solid fa-ticket icon"></i> Add trade</a></li>
+      <li><a href="trade_list.html"><i class="fa-solid fa-ticket icon"></i> trade list</a></li>
+    </ul>
+  </section>
+  <!-- SIDEBAR -->
+
+  <section id="content" style="margin-left:270px;">
+    <main>
+      <h1 class="title">Add New Candy</h1>
+
+      <form id="addCandyForm" enctype="multipart/form-data" novalidate>
+        <div>
+          <label for="re_type">Reward Type</label>
+          <select id="re_type" name="re_type" required>
+            <option value="">Select type</option>
+            <option value="Candy">Candy</option>
+            <option value="Drink">Drink</option>
+            <option value="Snack">Snack</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="re_name">Candy Name</label>
+          <input type="text" id="re_name" name="re_name" required placeholder="e.g. Gummy Bears" />
+        </div>
+
+        <div>
+          <label for="poster">Candy Image</label>
+          <input type="file" id="poster" name="poster" accept="image/*" required />
+        </div>
+
+        <button type="submit">Add Candy</button>
+      </form>
+
+      <div class="success-message" id="successMessage" style="display:none; margin-top: 1em; color: green;">🎉 Candy added successfully!</div>
+
+      <h2 style="margin-top: 2em;">Reward List</h2>
+      <table id="rewardTable" border="1" style="width: 100%; border-collapse: collapse;">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Point</th>
+      <th>Image</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Filled by JS -->
+  </tbody>
+</table>
+
+    </main>
+  </section>
+
+  <script src="trade.js"></script>
+</body>
+
+</html>

@@ -12,19 +12,21 @@
 <body>
 
 <!-- SIDEBAR -->
-    <section id="sidebar">
-        <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
-        <ul class="side-menu">
-            <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
-            <li class="divider" data-text="Movies Management">Movies Management</li>
-            <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
-            <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
-            <li><a href="showtimes.html"><i class='bx bxs-time icon'></i> Showtimes</a></li>
-            <li><a href="bookings.html"><i class="fa-solid fa-clock-rotate-left icon"></i> Bookings</a></li>
-            <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
-        </ul>
-    </section>
-    <!-- SIDEBAR -->
+  <section id="sidebar">
+    <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
+    <ul class="side-menu">
+      <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
+      <li class="divider" data-text="Movies Management">Movies Management</li>
+      <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
+      <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
+      <li><a href="showtimes.html"><i class='bx bxs-time icon'></i> Showtimes</a></li>
+      <li><a href="bookings.html"><i class="fa-solid fa-clock-rotate-left icon"></i> Bookings</a></li>
+      <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
+      <li><a href="trade_reward.html"><i class="fa-solid fa-ticket icon"></i> Add trade</a></li>
+      <li><a href="trade_list.html"><i class="fa-solid fa-ticket icon"></i> trade list</a></li>
+    </ul>
+  </section>
+  <!-- SIDEBAR -->
 
   <!-- MAIN CONTENT -->
   <section id="content">
@@ -59,9 +61,13 @@
           <input type="text" id="name" required />
         </div>
 
+       <div class="form-group">
+          <label for="name">Your Email:</label>
+          <input type="text" id="name" required />
+        </div>
         <div class="form-group">
-          <label for="email">Your Email:</label>
-          <input type="email" id="email" required />
+          <label for="name">Your Seat:</label>
+          <input type="text" id="name" required />
         </div>
 
         <button type="submit">Book Now</button>

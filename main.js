@@ -7,123 +7,114 @@ document.addEventListener('DOMContentLoaded', () => {
     sidebar.classList.toggle('collapsed');
   });
 
-  // Sample movie data
-  const movies = [
-    {id: 1, title: "Inception", genre: "Sci-Fi", duration: "148 min", rating: "PG-13"},
-    {id: 2, title: "The Godfather", genre: "Drama", duration: "175 min", rating: "R"},
-    {id: 3, title: "Spider-Man: No Way Home", genre: "Action", duration: "148 min", rating: "PG-13"},
-    {id: 4, title: "Toy Story 4", genre: "Animation", duration: "100 min", rating: "G"},
-    {id: 5, title: "Parasite", genre: "Thriller", duration: "132 min", rating: "R"}
-  ];
-
-  // Dashboard cards counts
+  // Elements
   const movieCountElem = document.getElementById('movieCount');
   const showtimeCountElem = document.getElementById('showtimeCount');
   const bookingCountElem = document.getElementById('bookingCount');
   const userCountElem = document.getElementById('userCount');
-
-  // For demo, mock counts for showtimes, bookings, and users
-  const showtimeCount = 22;
-  const bookingCount = 134;
-  const userCount = 58;
-
-  movieCountElem.textContent = movies.length;
-  showtimeCountElem.textContent = showtimeCount;
-  bookingCountElem.textContent = bookingCount;
-  userCountElem.textContent = userCount;
-
-  // Populate recent movies table
   const recentMoviesTableBody = document.querySelector('#recentMoviesTable tbody');
-  recentMoviesTableBody.innerHTML = '';
 
-  movies.forEach(movie => {
-    const tr = document.createElement('tr');
+  // Base API URL (adjust if deployed)
+  const API_BASE = 'http://localhost:8000';
 
-    tr.innerHTML = `
-      <td>${movie.title}</td>
-      <td>${movie.genre}</td>
-      <td>${movie.duration}</td>
-      <td>${movie.rating}</td>
-      <td>
-        <button class="edit-btn" data-id="${movie.id}" title="Edit">Edit</button>
-        <button class="delete-btn" data-id="${movie.id}" title="Delete" style="background-color:#b04040;">Delete</button>
-      </td>
-    `;
+  // Load dashboard data
+  async function loadDashboard() {
+    try {
+      const [moviesRes, showtimesRes, ticketsRes, usersRes] = await Promise.all([
+        fetch(`${API_BASE}/movie`),
+        fetch(`${API_BASE}/showtime`),
+        fetch(`${API_BASE}/tickets`),
+        fetch(`${API_BASE}/user`)
+      ]);
 
-    recentMoviesTableBody.appendChild(tr);
-  });
-
-  // Event delegation for edit and delete buttons on movie list
-  recentMoviesTableBody.addEventListener('click', (event) => {
-    const target = event.target;
-    if (target.classList.contains('edit-btn')) {
-      const id = target.dataset.id;
-      alert('Edit functionality for movie ID ' + id + ' is not implemented.');
-      // Implement edit modal or navigation here
-    } else if (target.classList.contains('delete-btn')) {
-      const id = Number(target.dataset.id);
-      // Confirm deletion
-      if (confirm('Are you sure you want to delete this movie?')) {
-        // Remove movie from movies array and update table and count
-        const index = movies.findIndex(m => m.id === id);
-        if (index !== -1) {
-          movies.splice(index, 1);
-          updateDashboard();
-          populateMovieTable();
-        }
+      if (!moviesRes.ok || !showtimesRes.ok || !ticketsRes.ok || !usersRes.ok) {
+        throw new Error('Failed to fetch some data');
       }
-    }
-  });
 
-  // Functions to update dashboard and repopulate table after changes
-  function updateDashboard() {
-    movieCountElem.textContent = movies.length;
-    // Other counts remain static for this demo
+      const movies = await moviesRes.json();
+      const showtimes = await showtimesRes.json();
+      const tickets = await ticketsRes.json();
+      const users = await usersRes.json();
+
+      // Update counts
+      movieCountElem.textContent = movies.length;
+      showtimeCountElem.textContent = showtimes.length;
+      bookingCountElem.textContent = tickets.length;
+      userCountElem.textContent = users.length;
+
+      // Populate movies table
+      populateMovieTable(movies);
+    } catch (err) {
+      console.error('Error loading dashboard:', err);
+      movieCountElem.textContent = 'Error';
+      showtimeCountElem.textContent = 'Error';
+      bookingCountElem.textContent = 'Error';
+      userCountElem.textContent = 'Error';
+    }
   }
 
-  function populateMovieTable() {
+  // Populate movies table
+  function populateMovieTable(movies) {
     recentMoviesTableBody.innerHTML = '';
     movies.forEach(movie => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${movie.title}</td>
-        <td>${movie.genre}</td>
-        <td>${movie.duration}</td>
-        <td>${movie.rating}</td>
+        <td>${movie.mv_name || ''}</td>
+        <td>${movie.genre || ''}</td>
+        <td>${movie.duration || ''}</td>
+        <td>${movie.status || ''}</td>
         <td>
-          <button class="edit-btn" data-id="${movie.id}" title="Edit">Edit</button>
-          <button class="delete-btn" data-id="${movie.id}" title="Delete" style="background-color:#b04040;">Delete</button>
+          <button class="edit-btn" data-id="${movie.mv_id}" title="Edit">Edit</button>
+          <button class="delete-btn" data-id="${movie.mv_id}" title="Delete" style="background-color:#b04040;">Delete</button>
         </td>
       `;
       recentMoviesTableBody.appendChild(tr);
     });
   }
 
+  // Handle click on edit/delete buttons with event delegation
+  recentMoviesTableBody.addEventListener('click', async (event) => {
+    const target = event.target;
+    if (target.classList.contains('edit-btn')) {
+      const id = target.dataset.id;
+      alert('Edit functionality for movie ID ' + id + ' is not implemented yet.');
+      // You can implement your edit modal or page navigation here
+    } else if (target.classList.contains('delete-btn')) {
+      const id = target.dataset.id;
+      if (confirm('Are you sure you want to delete this movie?')) {
+        try {
+          const res = await fetch(`${API_BASE}/movie/${id}`, {
+            method: 'DELETE'
+          });
+          if (!res.ok) throw new Error('Failed to delete movie');
+          alert('Movie deleted successfully');
+          await loadDashboard(); // refresh data after deletion
+        } catch (err) {
+          alert('Error deleting movie: ' + err.message);
+        }
+      }
+    }
+  });
+
   // ApexCharts - sample movies added per day chart
   const options = {
     chart: {
       type: 'bar',
       height: 300,
-      toolbar: {
-        show: false
-      },
+      toolbar: { show: false },
       foreColor: '#eee'
     },
     series: [{
       name: 'Movies Added',
-      data: [2, 1, 3, 2, 4, 0, 1]
+      data: [2, 1, 3, 2, 4, 0, 1] // You can replace with real data if you want
     }],
     xaxis: {
       categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       axisBorder: { show: false },
       axisTicks: { show: false }
     },
-    grid: {
-      borderColor: '#444466'
-    },
-    tooltip: {
-      theme: 'dark'
-    },
+    grid: { borderColor: '#444466' },
+    tooltip: { theme: 'dark' },
     colors: ['#ff5252']
   };
 
@@ -133,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chart.render();
   }
 
-  // Populate day filter dropdown (if present)
+  // Populate day filter dropdown (optional)
   const dayFilterSelect = document.getElementById('dayFilter');
   if(dayFilterSelect){
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -143,12 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
       option.textContent = day;
       dayFilterSelect.appendChild(option);
     });
-    // Filtering functionality (optional)
     dayFilterSelect.addEventListener('change', (e) => {
-      // Filter logic can be added based on selected day
-      alert(`Filter by day '${e.target.value}' not implemented.`);
+      alert(`Filter by day '${e.target.value}' is not implemented yet.`);
     });
   }
 
+  // Initial load
+  loadDashboard();
 });
-
