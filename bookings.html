@@ -2,158 +2,384 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="/main.css">
-  <title>Booking Page</title>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🎟️ Movie Seat Booking</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    #seatGrid {
+      display: grid;
+      grid-template-columns: repeat(5, 60px);
+      gap: 10px;
+      margin-top: 10px;
+    }
+    #seatGrid button {
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+    }
+    #seatGrid button.booked {
+      background-color: #999;
+      cursor: not-allowed;
+      color: #555;
+    }
+    #seatGrid button.selected {
+      background-color: green;
+      color: white;
+    }
+    #seatGrid button.available {
+      background-color: #eee;
+      color: #333;
+    }
+    button[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    table {
+      width: 100%;
+      margin-top: 30px;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    #movieDetails {
+      display: none;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 8px;
+      background: #fafafa;
+    }
+    #movieDetails h2 {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    #movieDetails .details-flex {
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+    }
+    #movieDetails img {
+      width: 150px;
+      border-radius: 8px;
+      object-fit: cover;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    #movieDetails p {
+      margin: 4px 0;
+    }
+  </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-  <section id="sidebar">
-    <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
-    <ul class="side-menu">
-      <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
-      <li class="divider" data-text="Movies Management">Movies Management</li>
-      <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
-      <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
-      <li><a href="showtimes.html"><i class='bx bxs-time icon'></i> Showtimes</a></li>
-      <li><a href="bookings.html"><i class="fa-solid fa-clock-rotate-left icon"></i> Bookings</a></li>
-      <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
-      <li><a href="trade_reward.html"><i class="fa-solid fa-ticket icon"></i> Add trade</a></li>
-      <li><a href="trade_list.html"><i class="fa-solid fa-ticket icon"></i> trade list</a></li>
-    </ul>
-  </section>
-  <!-- SIDEBAR -->
+<div class="container">
+  <h1>🎬 Movie Ticket Booking</h1>
 
-  <!-- MAIN CONTENT -->
-  <section id="content">
-    <main>
-      <h1 class="title">Book Your Ticket</h1>
+  <form id="bookingForm">
+    <div class="form-group">
+      <label for="movieSelect">Select Movie</label>
+      <select id="movieSelect" required></select>
+    </div>
 
-      <!-- Booking Form -->
-      <form id="bookingForm">
-        <div class="form-group">
-          <label for="movieSelect">Select Movie:</label>
-          <select id="movieSelect" required>
-            <option value="">--Select a Movie--</option>
-            <option value="Movie 1">Movie 1</option>
-            <option value="Movie 2">Movie 2</option>
-            <option value="Movie 3">Movie 3</option>
-          </select>
+    <div id="movieDetails">
+      <h2 id="movieTitle"></h2>
+      <div class="details-flex">
+        <img id="moviePoster" src="" alt="Poster" />
+        <div>
+          <p><strong>Description:</strong> <span id="movieDescription"></span></p>
+          <p><strong>Genre:</strong> <span id="movieGenre"></span></p>
+          <p><strong>Duration:</strong> <span id="movieDuration"></span> minutes</p>
+          <p><strong>Release Date:</strong> <span id="movieRelease"></span></p>
+          <p><strong>Price per seat:</strong> $<span id="moviePrice"></span></p>
         </div>
-
-        <div class="form-group">
-          <label for="showtimeSelect">Select Showtime:</label>
-          <select id="showtimeSelect" required>
-            <option value="">--Select a Showtime--</option>
-            <option value="10:00 AM">10:00 AM</option>
-            <option value="1:00 PM">1:00 PM</option>
-            <option value="4:00 PM">4:00 PM</option>
-            <option value="7:00 PM">7:00 PM</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="name">Your Name:</label>
-          <input type="text" id="name" required />
-        </div>
-
-       <div class="form-group">
-          <label for="name">Your Email:</label>
-          <input type="text" id="name" required />
-        </div>
-        <div class="form-group">
-          <label for="name">Your Seat:</label>
-          <input type="text" id="name" required />
-        </div>
-
-        <button type="submit">Book Now</button>
-      </form>
-
-      <!-- Booking List Table -->
-      <div class="tablecontainer">
-        <h2>Booking List</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Movie</th>
-              <th>Showtime</th>
-              <th>Name</th>
-              <th>Email</th>
-            </tr>
-          </thead>
-          <tbody id="bookingList">
-            <!-- Demo data rows will be injected here -->
-          </tbody>
-        </table>
       </div>
-    </main>
-  </section>
+    </div>
 
-  <script>
-    const form = document.getElementById('bookingForm');
-    const bookingList = document.getElementById('bookingList');
+    <div class="form-group">
+      <label for="showtimeSelect">Select Showtime</label>
+      <select id="showtimeSelect" required>
+        <option value="1">10:00 AM</option>
+        <option value="2">1:00 PM</option>
+      </select>
+    </div>
 
-    // Handle Form Submission
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const movie = document.getElementById('movieSelect').value;
-      const showtime = document.getElementById('showtimeSelect').value;
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" id="name" required />
+    </div>
 
-      const newRow = `
+    <div class="form-group">
+      <label>Your Email</label>
+      <input type="email" id="email" required />
+    </div>
+
+    <div class="form-group">
+      <label>Select Seats</label>
+      <div id="seatGrid"></div>
+    </div>
+
+    <button type="submit">Book Now</button>
+  </form>
+
+  <div>
+    <h2>🧾 Booking List</h2>
+    <table>
+      <thead>
         <tr>
-          <td>${movie}</td>
-          <td>${showtime}</td>
-          <td>${name}</td>
-          <td>${email}</td>
+          <th>Movie</th>
+          <th>Showtime</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Seats</th>
         </tr>
-      `;
-      bookingList.innerHTML += newRow;
-      form.reset();
+      </thead>
+      <tbody id="bookingList"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  const movieSelect = document.getElementById('movieSelect');
+  const showtimeSelect = document.getElementById('showtimeSelect');
+  const seatGrid = document.getElementById('seatGrid');
+  const bookingList = document.getElementById('bookingList');
+  const form = document.getElementById('bookingForm');
+  const selectedSeats = new Set();
+  let bookedSeats = [];
+  let moviesData = [];
+
+  const movieDetailsDiv = document.getElementById('movieDetails');
+  const movieTitle = document.getElementById('movieTitle');
+  const moviePoster = document.getElementById('moviePoster');
+  const movieDescription = document.getElementById('movieDescription');
+  const movieGenre = document.getElementById('movieGenre');
+  const movieDuration = document.getElementById('movieDuration');
+  const movieRelease = document.getElementById('movieRelease');
+  const moviePrice = document.getElementById('moviePrice');
+
+  const rows = ['A', 'B', 'C', 'D'];
+  const cols = [1, 2, 3, 4, 5];
+
+  async function loadMovies() {
+    try {
+      const res = await fetch('http://localhost:8000/api/movies');
+      const data = await res.json();
+      console.log('Movies API response:', data);
+
+      // Adjust this depending on your API structure:
+      // If your API returns { movies: [...] } use data.movies
+      // Else if data is array directly, use data itself
+      // For example:
+      // moviesData = data.movies || data;
+
+      // Here we try both:
+      moviesData = Array.isArray(data) ? data : (data.movies || []);
+
+      movieSelect.innerHTML = `<option value="">-- Select Movie --</option>`;
+      moviesData.forEach(movie => {
+        const opt = document.createElement('option');
+        opt.value = movie.mv_id;
+        opt.textContent = movie.mv_name;
+        movieSelect.appendChild(opt);
+      });
+
+    } catch (error) {
+      console.error('Error loading movies:', error);
+      movieSelect.innerHTML = `<option value="">Failed to load movies</option>`;
+    }
+  }
+
+  async function loadBookedSeats(showtimeId) {
+    try {
+      const res = await fetch(`http://localhost:8000/api/booked-seats/${showtimeId}`);
+      const data = await res.json();
+      bookedSeats = data.bookedSeats || [];
+      renderSeats();
+    } catch (error) {
+      console.error('Error loading booked seats:', error);
+      bookedSeats = [];
+      renderSeats();
+    }
+  }
+
+  function renderSeats() {
+    seatGrid.innerHTML = '';
+    rows.forEach(row => {
+      cols.forEach(col => {
+        const seatId = `${row}${col}`;
+        const btn = document.createElement('button');
+        btn.textContent = seatId;
+
+        if (bookedSeats.includes(seatId)) {
+          btn.className = 'booked';
+          btn.disabled = true;
+        } else {
+          btn.className = selectedSeats.has(seatId) ? 'selected' : 'available';
+          btn.onclick = () => {
+            if (selectedSeats.has(seatId)) {
+              selectedSeats.delete(seatId);
+              btn.className = 'available';
+            } else {
+              selectedSeats.add(seatId);
+              btn.className = 'selected';
+            }
+          };
+        }
+        seatGrid.appendChild(btn);
+      });
     });
+  }
 
-    // Demo Data
-    const demoBookings = [
-      {
-        movie: 'Movie 1',
-        showtime: '10:00 AM',
-        name: 'Alice Johnson',
-        email: 'alice@example.com'
-      },
-      {
-        movie: 'Movie 2',
-        showtime: '1:00 PM',
-        name: 'Bob Smith',
-        email: 'bob@example.com'
-      },
-      {
-        movie: 'Movie 3',
-        showtime: '4:00 PM',
-        name: 'Charlie Lee',
-        email: 'tim@example.com'
-      }
-    ];
+  function showMovieDetails(movieId) {
+    if (!movieId) {
+      movieDetailsDiv.style.display = 'none';
+      return;
+    }
 
-    // Load demo data on page load
-    window.addEventListener('DOMContentLoaded', () => {
-      demoBookings.forEach(booking => {
+    const movie = moviesData.find(m => m.mv_id == movieId);
+    if (!movie) {
+      movieDetailsDiv.style.display = 'none';
+      return;
+    }
+
+    movieTitle.textContent = movie.mv_name || 'N/A';
+    moviePoster.src = movie.posterURL || 'https://via.placeholder.com/150x220?text=No+Image';
+    movieDescription.textContent = movie.description || 'No description available';
+    movieGenre.textContent = movie.genre || 'N/A';
+    movieDuration.textContent = movie.duration || 'N/A';
+    movieRelease.textContent = movie.release_date || 'N/A';
+    moviePrice.textContent = movie.price || 'N/A';
+
+    movieDetailsDiv.style.display = 'block';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const movieId = movieSelect.value;
+    const movieName = movieSelect.options[movieSelect.selectedIndex].text;
+    const showtimeId = showtimeSelect.value;
+    const showtimeText = showtimeSelect.options[showtimeSelect.selectedIndex].text;
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const selectedList = [...selectedSeats];
+
+    if (!movieId || !showtimeId || selectedList.length === 0) {
+      alert('Please complete the form and select seats.');
+      return;
+    }
+
+    const movie = moviesData.find(m => m.mv_id == movieId);
+
+    const payload = {
+      u_id: 1,
+      showtime_id: parseInt(showtimeId),
+      mv_name: movieName,
+      selectedSeats: selectedList,
+      price: selectedList.length * (movie?.price || 10),
+      name: name,
+      time_b: showtimeText,
+      theaters: 1,
+      selectedTime: showtimeText,
+      image: movie?.posterURL || 'image.jpg',
+      show_date: new Date().toISOString().split('T')[0],
+      posterURL: movie?.posterURL || 'poster.jpg',
+      status: 'booked',
+    };
+
+    try {
+      const res = await fetch('http://localhost:8000/api/book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const result = await res.json();
+
+      if (result.success) {
         const row = `
           <tr>
-            <td>${booking.movie}</td>
-            <td>${booking.showtime}</td>
-            <td>${booking.name}</td>
-            <td>${booking.email}</td>
+            <td>${movieName}</td>
+            <td>${showtimeText}</td>
+            <td>${name}</td>
+            <td>${email}</td>
+            <td>${selectedList.join(', ')}</td>
           </tr>
         `;
         bookingList.innerHTML += row;
-      });
-    });
-  </script>
+        bookedSeats.push(...selectedList);
+        selectedSeats.clear();
+        renderSeats();
+        form.reset();
+        movieDetailsDiv.style.display = 'none';
+      } else {
+        alert('Booking failed!');
+      }
+    } catch (error) {
+      alert('Error booking ticket: ' + error.message);
+      console.error(error);
+    }
+  });
+
+  movieSelect.addEventListener('change', () => {
+    const movieId = movieSelect.value;
+    showMovieDetails(movieId);
+    selectedSeats.clear();
+    renderSeats();
+  });
+
+  showtimeSelect.addEventListener('change', () => {
+    const showtimeId = showtimeSelect.value;
+    if (showtimeId) loadBookedSeats(showtimeId);
+    selectedSeats.clear();
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    loadMovies();
+  });
+</script>
 
 </body>
 </html>

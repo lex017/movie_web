@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
+      // Upload image first
       const posterData = new FormData();
       posterData.append("poster", poster);
 
@@ -60,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!uploadRes.ok) throw new Error("อัปโหลดรูปไม่สำเร็จ");
       const uploadResult = await uploadRes.json();
 
+      // Prepare candy data to save
       const candyData = {
         re_type,
         re_name,
@@ -67,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         r_point
       };
 
+      // Save candy data
       const saveRes = await fetch("http://localhost:8000/reward", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

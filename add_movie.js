@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const successMessage = document.getElementById('successMessage');
   const theaterSelect = document.getElementById('theater');
 
-  // STEP 1: Load available theaters (excluding ones with status = "now")
+ 
   try {
     const res = await fetch("http://localhost:8000/movie");
     if (!res.ok) throw new Error("Failed to fetch movies");
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const takenTheaters = new Set(
       movies
         .filter(m => m.status && m.status.toLowerCase() === 'now')
-        .map(m => String(m.theaters)) // theater field in DB is "theaters"
+        .map(m => String(m.theaters)) 
     );
 
     const theaterOptions = [
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     alert("Failed to load theater list.");
   }
 
-  // STEP 2: Handle movie form submission
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     successMessage.style.display = 'none';
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const genre = form.genre.value;
     const theater = form.theater.value.trim();
     const status = form.status.value.trim();
-    const releaseDate = form.releaseDate.value; // ✅ corrected name
+    const releaseDate = form.releaseDate.value; 
     const description = form.description.value.trim();
     const price = Number(form.price.value);
     const duration = Number(form.duration.value);
@@ -71,7 +71,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-      // Upload poster to backend
       const posterData = new FormData();
       posterData.append("poster", poster);
 
@@ -84,21 +83,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       const uploadResult = await uploadRes.json();
       if (!uploadResult.url) throw new Error("Poster upload did not return a URL");
 
-      // Prepare movie object
+     
       const movieData = {
         mv_name: title,
         description,
         duration,
         genre,
         status,
-        release_date: releaseDate,   // ✅ use correct key
+        release_date: releaseDate,   
         posterURL: uploadResult.url,
         price,
-        theaters: theater,           // ✅ match backend field name
-        seat: availableSeat          // ✅ include seat
+        theaters: theater,        
+        seat: availableSeat          
       };
 
-      // Save movie to database
+ 
       const saveRes = await fetch("http://localhost:8000/movie", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -113,7 +112,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const movieResult = await saveRes.json();
       const movieId = movieResult.movie_id;
 
-      // Insert showtimes
+
       for (const time of times) {
         const showtimeData = {
           movie_id: movieId,
