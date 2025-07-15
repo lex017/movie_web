@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const target = e.target;
     if (target.classList.contains('edit-btn')) {
       const id = target.getAttribute('data-id');
-      window.location.href = `edit_movie.html?id=${id}`;
+      window.location.href = `editmovie.html?id=${id}`;
     } else if (target.classList.contains('delete-btn')) {
       const id = target.getAttribute('data-id');
       deleteMovie(id);

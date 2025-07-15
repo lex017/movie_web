@@ -63,10 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${movie.genre || ''}</td>
         <td>${movie.duration || ''}</td>
         <td>${movie.status || ''}</td>
-        <td>
-          <button class="edit-btn" data-id="${movie.mv_id}" title="Edit">Edit</button>
-          <button class="delete-btn" data-id="${movie.mv_id}" title="Delete" style="background-color:#b04040;">Delete</button>
-        </td>
+        
       `;
       recentMoviesTableBody.appendChild(tr);
     });
