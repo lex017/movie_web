@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User List - Theater Admin</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/main.css" />
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<section id="sidebar">
+  <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
+  <ul class="side-menu">
+    <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
+    <li class="divider" data-text="Movies Management">Movies Management</li>
+    <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
+    <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
+    <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
+    <li><a href="trade_reward.html"><i class="fa-solid fa-ticket icon"></i> Add trade</a></li>
+    <li><a href="trade_list.html"><i class="fa-solid fa-ticket icon"></i> trade list</a></li>
+    <li><a href="user_list.html"><i class='bx bxs-user icon'></i> User list</a></li>
+    <li><a href="emp_list.html"><i class='bx bxs-id-card icon'></i> Employee list</a></li>
+    <li><a href="trade_history.html" ><i class="fa-solid fa-ticket icon"></i> Trade Reward List</a></li>
+  </ul>
+</section>
+  <!-- SIDEBAR -->
+
+<section id="content" style="margin-left:270px;">
+  <main>
+    <h1 class="title">User List</h1>
+    <div class="tablecontainer">
+      <table id="userTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Tel</th>
+            <th>Point</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+</section>
+
+<!-- Edit Modal -->
+<div id="editUserModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#00000099; justify-content:center; align-items:center; z-index:1000;">
+  <div style="background:#07043a; padding:20px; border-radius:8px; width:90%; max-width:500px;">
+    <h2>Edit User</h2>
+    <label>Name</label>
+    <input id="editUName" type="text" style="width:100%; padding:8px;" />
+    <label>Email</label>
+    <input id="editUEmail" type="email" style="width:100%; padding:8px;" />
+    <label>Gender</label>
+    <input id="editUGender" type="text" style="width:100%; padding:8px;" />
+    <label>Tel</label>
+    <input id="editUTel" type="text" style="width:100%; padding:8px;" />
+    <label>Point</label>
+    <input id="editUPoint" type="number" style="width:100%; padding:8px;" />
+    <div style="margin-top:12px; text-align:right;">
+      <button id="cancelEditUser">Cancel</button>
+      <button id="saveEditUser" style="background:#28a745; color:white; padding:8px 16px;">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tableBody = document.querySelector('#userTable tbody');
+    const editModal = document.getElementById('editUserModal');
+    const editUName = document.getElementById('editUName');
+    const editUEmail = document.getElementById('editUEmail');
+    const editUGender = document.getElementById('editUGender');
+    const editUTel = document.getElementById('editUTel');
+    const editUPoint = document.getElementById('editUPoint');
+    const cancelEditUser = document.getElementById('cancelEditUser');
+    const saveEditUser = document.getElementById('saveEditUser');
+    let currentEditId = null;
+
+    async function fetchUsers() {
+      try {
+        const res = await fetch('http://localhost:8000/user');
+        const users = await res.json();
+        tableBody.innerHTML = '';
+        users.forEach(user => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${user.u_name}</td>
+            <td>${user.u_email}</td>
+            <td>${user.u_gender}</td>
+            <td>${user.u_tel}</td>
+            <td>${user.point || 0}</td>
+            <td>
+              <button class="edit-btn" data-id="${user.u_id}">Edit</button>
+              <button class="delete-btn" data-id="${user.u_id}">Delete</button>
+            </td>
+          `;
+          tableBody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error('❌ Error fetching users:', err);
+        tableBody.innerHTML = `<tr><td colspan="6">Failed to load user data</td></tr>`;
+      }
+    }
+
+    async function openEditUser(id) {
+      try {
+        const res = await fetch(`http://localhost:8000/user/${id}`);
+        const user = await res.json();
+        currentEditId = id;
+        editUName.value = user.u_name;
+        editUEmail.value = user.u_email;
+        editUGender.value = user.u_gender;
+        editUTel.value = user.u_tel;
+        editUPoint.value = user.point || 0;
+        editModal.style.display = 'flex';
+      } catch (err) {
+        alert('❌ Failed to fetch user');
+      }
+    }
+
+    async function saveEditedUser() {
+      const updated = {
+        u_name: editUName.value,
+        u_email: editUEmail.value,
+        u_gender: editUGender.value,
+        u_tel: editUTel.value,
+        point: parseInt(editUPoint.value)
+      };
+
+      try {
+        const res = await fetch(`http://localhost:8000/user/${currentEditId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updated)
+        });
+        if (res.ok) {
+          alert('✅ User updated');
+          editModal.style.display = 'none';
+          fetchUsers();
+        } else {
+          alert('❌ Update failed');
+        }
+      } catch (err) {
+        alert('❌ Error updating user');
+      }
+    }
+
+    async function deleteUser(id) {
+      if (confirm('Delete this user?')) {
+        try {
+          const res = await fetch(`http://localhost:8000/user/${id}`, {
+            method: 'DELETE'
+          });
+          if (res.ok) {
+            alert('✅ User deleted');
+            fetchUsers();
+          } else {
+            alert('❌ Delete failed');
+          }
+        } catch (err) {
+          alert('❌ Error deleting user');
+        }
+      }
+    }
+
+    cancelEditUser.addEventListener('click', () => {
+      editModal.style.display = 'none';
+    });
+
+    saveEditUser.addEventListener('click', saveEditedUser);
+
+    tableBody.addEventListener('click', (e) => {
+      const target = e.target;
+      const id = target.getAttribute('data-id');
+      if (target.classList.contains('edit-btn')) {
+        openEditUser(id);
+      } else if (target.classList.contains('delete-btn')) {
+        deleteUser(id);
+      }
+    });
+
+    fetchUsers();
+  });
+</script>
+</body>
+</html>

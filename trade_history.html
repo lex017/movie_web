@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trade Reward List - Theater Admin</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/main.css" />
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<section id="sidebar">
+  <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
+  <ul class="side-menu">
+    <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
+    <li class="divider" data-text="Movies Management">Movies Management</li>
+    <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
+    <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
+    <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
+    <li><a href="trade_reward.html"><i class="fa-solid fa-ticket icon"></i> Add trade</a></li>
+    <li><a href="trade_list.html"><i class="fa-solid fa-ticket icon"></i> trade list</a></li>
+    <li><a href="user_list.html"><i class='bx bxs-user icon'></i> User list</a></li>
+    <li><a href="emp_list.html"><i class='bx bxs-id-card icon'></i> Employee list</a></li>
+    <li><a href="trade_history.html" ><i class="fa-solid fa-ticket icon"></i> Trade Reward List</a></li>
+  </ul>
+</section>
+<!-- SIDEBAR -->
+
+<!-- CONTENT -->
+<section id="content" style="margin-left:270px;">
+  <nav>
+    <i class="bx bx-menu toggle-sidebar"></i>
+    <a href="#" class="nav-link">
+      <i class="bx bxs-bell icon"></i>
+      <span class="badge" id="notification-badge">0</span>
+    </a>
+    <a href="chat.html" class="nav-link">
+      <i class="bx bxs-message-square-dots icon"></i>
+      <span class="badge">8</span>
+    </a>
+    <span class="divider"></span>
+    <div class="profile">
+      <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9" alt="" />
+      <ul class="profile-link">
+        <li><a href="#"><i class="bx bxs-user-circle icon"></i> Profile</a></li>
+        <li><a href="#"><i class="bx bxs-cog"></i> Settings</a></li>
+        <li><a href="login.html"><i class="bx bxs-log-out-circle"></i> Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <h1 class="title">Trade Reward List</h1>
+    <button class="add-movie-btn" id="btnAddTrade"><i class="bx bx-plus"></i> Add New Trade Reward</button>
+    <div class="tablecontainer">
+      <table id="tradeRewardTable">
+        <thead>
+          <tr>
+            <th>Trade ID</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Reward Name</th>
+            <th>Reward Type</th>
+            <th>Points</th>
+            <th>User Name</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+</section>
+
+<!-- SCRIPT -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tradeRewardTableBody = document.querySelector('#tradeRewardTable tbody');
+    const btnAddTrade = document.getElementById('btnAddTrade');
+
+    btnAddTrade.addEventListener('click', () => {
+      window.location.href = 'trade_add.html';
+    });
+
+    // Cache user names to reduce API calls
+    const userNameCache = {};
+
+    // Fetch user name by user ID, with caching
+   async function fetchUserName(u_id) {
+  if (userNameCache[u_id]) return userNameCache[u_id];
+  try {
+    const res = await fetch(`http://localhost:8000/user/${u_id}`);
+    if (!res.ok) throw new Error('User not found');
+    const user = await res.json();
+    const name = user.u_name || `User#${u_id}`; // เปลี่ยนตรงนี้เป็น u_name
+    userNameCache[u_id] = name;
+    return name;
+  } catch {
+    return `User#${u_id}`;
+  }
+}
+
+
+    async function fetchTradeRewards() {
+      try {
+        const res = await fetch('http://localhost:8000/tradereward');
+        if (!res.ok) throw new Error('Failed to fetch trade rewards');
+        const trades = await res.json();
+
+        tradeRewardTableBody.innerHTML = '';
+
+        for (const trade of trades) {
+          const userName = await fetchUserName(trade.u_id);
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${trade.trade_id}</td>
+            <td>${new Date(trade.trade_datetime).toLocaleString()}</td>
+            <td>${trade.status}</td>
+            <td>${trade.re_name}</td>
+            <td>${trade.re_type}</td>
+            <td>${trade.point}</td>
+            <td>${userName}</td>
+           
+          `;
+          tradeRewardTableBody.appendChild(tr);
+        }
+      } catch (error) {
+        console.error('Error loading trade rewards:', error);
+        tradeRewardTableBody.innerHTML = `<tr><td colspan="8">❌ Failed to load data</td></tr>`;
+      }
+    }
+
+    async function deleteTradeReward(id) {
+      if (confirm('Are you sure you want to delete this trade reward?')) {
+        try {
+          const res = await fetch(`http://localhost:8000/tradereward/${id}`, {
+            method: 'DELETE',
+          });
+          if (res.ok) {
+            alert('✅ Trade reward deleted');
+            fetchTradeRewards();
+          } else {
+            alert('❌ Delete failed');
+          }
+        } catch {
+          alert('❌ Delete error');
+        }
+      }
+    }
+
+    async function openEditDialog(id) {
+      // สำหรับตัวอย่างนี้ สมมติว่าไม่มี modal edit แบบละเอียด
+      alert(`Edit function not implemented yet for trade reward ID: ${id}`);
+    }
+
+    tradeRewardTableBody.addEventListener('click', (e) => {
+      const target = e.target;
+      if (target.classList.contains('edit-btn')) {
+        const id = target.getAttribute('data-id');
+        openEditDialog(id);
+      } else if (target.classList.contains('delete-btn')) {
+        const id = target.getAttribute('data-id');
+        deleteTradeReward(id);
+      }
+    });
+
+    fetchTradeRewards();
+  });
+</script>
+
+</body>
+
+</html>

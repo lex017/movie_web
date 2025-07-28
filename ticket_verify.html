@@ -6,8 +6,7 @@
   <title>Ticket Verification - Theater Admin</title>
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <!-- Font Awesome CDN -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 
   <link rel="stylesheet" href="/main.css" />
@@ -104,25 +103,22 @@
 </head>
 <body>
 
-<!-- SIDEBAR -->
-  <section id="sidebar">
-    <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
-    <ul class="side-menu">
-      <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
-      <li class="divider" data-text="Movies Management">Movies Management</li>
-      <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
-      <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
-     
-     
-      <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
-      <li><a href="trade_reward.html"><i class="fa-solid fa-ticket icon"></i> Add trade</a></li>
-      <li><a href="trade_list.html"><i class="fa-solid fa-ticket icon"></i> trade list</a></li>
-    </ul>
-  </section>
-  <!-- SIDEBAR -->
-
-<!-- MAIN CONTENT -->
-<section id="content" style="margin-left:270px;">
+<section id="sidebar">
+  <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
+  <ul class="side-menu">
+    <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
+    <li class="divider" data-text="Movies Management">Movies Management</li>
+    <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
+    <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
+    <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
+    <li><a href="trade_reward.html"><i class="fa-solid fa-ticket icon"></i> Add trade</a></li>
+    <li><a href="trade_list.html"><i class="fa-solid fa-ticket icon"></i> trade list</a></li>
+    <li><a href="user_list.html"><i class='bx bxs-user icon'></i> User list</a></li>
+    <li><a href="emp_list.html"><i class='bx bxs-id-card icon'></i> Employee list</a></li>
+    <li><a href="trade_history.html" ><i class="fa-solid fa-ticket icon"></i> Trade Reward List</a></li>
+  </ul>
+</section>
+  <section id="content" style="margin-left:270px;">
   <nav>
     <i class="bx bx-menu toggle-sidebar"></i>
     <a href="#" class="nav-link">
@@ -154,18 +150,16 @@
             <th>User</th>
             <th>Movie</th>
             <th>Seats</th>
-            <th>Payment Image</th>
+            <th>Theater</th> <th>Payment Image</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody id="ticketBody">
-          <!-- Tickets will load here -->
-        </tbody>
+          </tbody>
       </table>
     </div>
 
-    <!-- Image Zoom Modal -->
     <div id="imageModal" class="modal">
       <span class="close">&times;</span>
       <img class="modal-content" id="modalImage">
@@ -174,9 +168,8 @@
   </main>
 </section>
 
-<!-- ✅ Your HTML code is the same as you posted — I’ll only change the JS part below -->
 <script>
-  const API_URL = 'http://localhost:8000';
+  const API_URL = 'http://localhost:8000'; // Make sure this matches your backend API URL
 
   const ticketBody = document.getElementById('ticketBody');
 
@@ -187,56 +180,71 @@
   async function loadTickets() {
     try {
       const res = await fetch(`${API_URL}/tickets`);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
       const tickets = await res.json();
       renderTickets(tickets);
     } catch (err) {
       console.error('Failed to load tickets:', err);
+      ticketBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:red;">Failed to load ticket data. Please check the backend server.</td></tr>`;
     }
   }
 
   function renderTickets(tickets) {
-    ticketBody.innerHTML = '';
+    ticketBody.innerHTML = ''; // Clear existing rows
+
+    if (tickets.length === 0) {
+      ticketBody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No tickets to verify.</td></tr>`;
+      return;
+    }
 
     tickets.forEach(ticket => {
       const tr = document.createElement('tr');
 
       const statusClass = {
         pending: 'pending',
-        paid: 'paid',
+        paid: 'paid', // Assuming 'paid' is an intermediate status before 'verified'
         verified: 'verified',
         rejected: 'rejected'
-      }[ticket.status] || 'pending';
+      }[ticket.status] || 'pending'; // Default to pending if status is unknown
 
+      // Disable buttons if status is not 'pending'
       const disabled = ticket.status !== 'pending' ? 'disabled' : '';
 
       tr.innerHTML = `
-        <td>${ticket.name || 'Unknown'}</td>
-        <td>${ticket.mv_name || 'N/A'}</td>
+        <td>${ticket.name || 'Unknown User'}</td>
+        <td>${ticket.mv_name || 'N/A Movie'}</td>
         <td>${ticket.seat_num || '-'}</td>
-        <td><img class="payment-image" src="${ticket.image}" alt="Payment proof" /></td>
-        <td><span class="status ${statusClass}">${capitalize(ticket.status)}</span></td>
+        <td>${ticket.theaters || 'N/A'}</td> <td><img class="payment-image" src="${ticket.image || 'placeholder.png'}" alt="Payment proof" onerror="this.onerror=null;this.src='placeholder.png';" /></td>
+        <td><span class="status ${statusClass}">${capitalize(ticket.status || 'pending')}</span></td>
         <td>
           <button class="verify" ${disabled} data-id="${ticket.ticket_id}" data-uid="${ticket.u_id}">Verify</button>
           <button class="reject" ${disabled} data-id="${ticket.ticket_id}" data-uid="${ticket.u_id}">Reject</button>
         </td>
       `;
-
       ticketBody.appendChild(tr);
     });
   }
 
-  // ✅ Handle Verify / Reject / Image Zoom
+  // Handle Verify / Reject / Image Zoom
   ticketBody.addEventListener('click', async (e) => {
     if (e.target.tagName === 'BUTTON') {
       const ticketId = e.target.dataset.id;
       const u_id = e.target.dataset.uid;
+      const currentTicketStatus = e.target.closest('tr').querySelector('.status').textContent.toLowerCase();
 
-      // Only update ticket status
+      // Prevent action if already processed
+      if (currentTicketStatus !== 'pending') {
+          alert(`This ticket is already ${currentTicketStatus}.`);
+          return;
+      }
+
       let statusToUpdate = '';
       if (e.target.classList.contains('verify')) {
-        statusToUpdate = 'paid';
+        statusToUpdate = 'paid'; // Set status to 'paid' upon verification
 
-        // ✅ STEP 1: Update ticket status to "paid"
+        // Step 1: Update ticket status to "paid"
         try {
           const res = await fetch(`${API_URL}/ticket/${ticketId}`, {
             method: 'PUT',
@@ -244,24 +252,33 @@
             body: JSON.stringify({ status: statusToUpdate })
           });
 
-          if (!res.ok) throw new Error('Failed to update ticket');
+          if (!res.ok) {
+            const errorText = await res.text();
+            throw new Error(`Failed to update ticket status: ${errorText}`);
+          }
 
-          // ✅ STEP 2: Update user points +10
-          await fetch(`${API_URL}/user/points/${u_id}`, {
+          // Step 2: Update user points +10
+          // This endpoint will likely need to be created or modified on your backend
+          const userPointsRes = await fetch(`${API_URL}/user/add-points/${u_id}`, { // Using a clearer endpoint
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ points: 10 }) // ➕ Add 10 points to the user
+            body: JSON.stringify({ pointsToAdd: 10 }) // Send points to add
           });
 
-          alert('✅ Ticket verified and 10 points added!');
-          loadTickets();
+          if (!userPointsRes.ok) {
+            const errorText = await userPointsRes.text();
+            throw new Error(`Failed to add user points: ${errorText}`);
+          }
+
+          alert('✅ Ticket verified and 10 points added to user!');
+          loadTickets(); // Reload data to reflect changes
         } catch (err) {
           console.error('❌ Verification error:', err);
-          alert('❌ Failed to verify ticket');
+          alert('❌ Failed to verify ticket: ' + err.message);
         }
 
       } else if (e.target.classList.contains('reject')) {
-        // ❌ REJECT CASE
+        // REJECT CASE
         try {
           const res = await fetch(`${API_URL}/ticket/${ticketId}`, {
             method: 'PUT',
@@ -269,25 +286,31 @@
             body: JSON.stringify({ status: 'rejected' })
           });
 
-          if (!res.ok) throw new Error('Failed to reject ticket');
+          if (!res.ok) {
+            const errorText = await res.text();
+            throw new Error(`Failed to reject ticket: ${errorText}`);
+          }
           alert('🚫 Ticket rejected');
-          loadTickets();
+          loadTickets(); // Reload data to reflect changes
         } catch (err) {
           console.error('❌ Reject error:', err);
+          alert('❌ Failed to reject ticket: ' + err.message);
         }
       }
     }
 
-    // ✅ Zoom image logic
+    // Zoom image logic
     if (e.target.tagName === 'IMG' && e.target.classList.contains('payment-image')) {
+      const modal = document.getElementById("imageModal");
+      const modalImg = document.getElementById("modalImage");
       modal.style.display = "block";
       modalImg.src = e.target.src;
     }
   });
 
-  // Modal logic
+  // Modal close logic
   const modal = document.getElementById("imageModal");
-  const modalImg = document.getElementById("modalImage");
+  const modalImg = document.getElementById("modalImage"); // Ensure this is defined here
   const span = document.getElementsByClassName("close")[0];
 
   span.onclick = function () {
@@ -300,6 +323,9 @@
     }
   };
 
-  // ✅ Initial load
+  // Initial load
   loadTickets();
 </script>
+
+</body>
+</html>

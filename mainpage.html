@@ -14,18 +14,21 @@
 
 
 <!-- SIDEBAR -->
-  <section id="sidebar">
-    <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
-    <ul class="side-menu">
-      <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
-      <li class="divider" data-text="Movies Management">Movies Management</li>
-      <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
-      <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
-      <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
-      <li><a href="trade_reward.html"><i class="fa-solid fa-ticket icon"></i> Add trade</a></li>
-      <li><a href="trade_list.html"><i class="fa-solid fa-ticket icon"></i> trade list</a></li>
-    </ul>
-  </section>
+<section id="sidebar">
+  <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
+  <ul class="side-menu">
+    <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
+    <li class="divider" data-text="Movies Management">Movies Management</li>
+    <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
+    <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
+    <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
+    <li><a href="trade_reward.html"><i class="fa-solid fa-ticket icon"></i> Add trade</a></li>
+    <li><a href="trade_list.html"><i class="fa-solid fa-ticket icon"></i> trade list</a></li>
+    <li><a href="user_list.html"><i class='bx bxs-user icon'></i> User list</a></li>
+    <li><a href="emp_list.html"><i class='bx bxs-id-card icon'></i> Employee list</a></li>
+    <li><a href="trade_history.html" ><i class="fa-solid fa-ticket icon"></i> Trade Reward List</a></li>
+  </ul>
+</section>
   <!-- SIDEBAR -->
 
     <!-- NAVBAR -->
@@ -74,8 +77,8 @@
                 <div class="card">
                     <div class="head">
                         <div>
-                            <h2 id="showtimeCount">0</h2>
-                            <p>Showtimes</p>
+                           <h2 id="rewardCount">0</h2>
+                            <p>rewardCount</p>
                         </div>
                         <i class='bx bxs-time icon'></i>
                     </div>
@@ -92,7 +95,7 @@
                 <div class="card">
                     <div class="head">
                         <div>
-                            <h2 id="userCount">0</h2>
+                           <h2 id="userCount">0</h2>
                             <p>Users</p>
                         </div>
                         <i class='bx bxs-user icon'></i>
@@ -101,7 +104,12 @@
             </div>
             <div class="data">
                 <div class="content-data">
+                    <div class="head" style="margin-top: 40px;">
+  <h3>Movies Added This Week</h3>
+</div>
+<div id="ticketRevenueChart"></div>
                     <div class="head">
+                        
                         <h3>Recent Movies</h3>
                         <div class="menu">
                             <i class='bx bx-dots-horizontal-rounded icon'></i>

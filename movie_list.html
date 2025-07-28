@@ -8,25 +8,76 @@
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="/main.css" />
+  <style>
+    /* Basic styling for the modal to make it stand out */
+    #editModal > div {
+        background: #07043a; /* Dark background */
+        color: #eee; /* Light text */
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        border: 1px solid #444;
+    }
+    #editModal label {
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #ddd;
+    }
+    #editModal input[type="text"],
+    #editModal input[type="number"],
+    #editModal input[type="date"],
+    #editModal textarea {
+        background-color: #222;
+        border: 1px solid #555;
+        color: white;
+        padding: 10px;
+        border-radius: 6px;
+    }
+    #editModal button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+        margin-left: 10px;
+    }
+    #editModal #cancelEdit {
+        background:#6c757d;
+        color:white;
+    }
+    #editModal #cancelEdit:hover {
+        background:#5a6268;
+    }
+    #editModal #saveEdit {
+        background:#28a745;
+        color:white;
+    }
+    #editModal #saveEdit:hover {
+        background:#218838;
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- SIDEBAR -->
-  <section id="sidebar">
-    <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
-    <ul class="side-menu">
-      <li><a href="mainpage.html"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
-      <li class="divider" data-text="Movies Management">Movies Management</li>
-      <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
-      <li><a href="movie_list.html" class="active"><i class='bx bxs-film icon'></i> Movie List</a></li>
-      <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
-      <li><a href="trade_reward.html"><i class="fa-solid fa-ticket icon"></i> Add trade</a></li>
-      <li><a href="trade_list.html"><i class="fa-solid fa-ticket icon"></i> trade list</a></li>
-    </ul>
-  </section>
-
-  <!-- CONTENT -->
+<section id="sidebar">
+  <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
+  <ul class="side-menu">
+    <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
+    <li class="divider" data-text="Movies Management">Movies Management</li>
+    <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
+    <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
+    <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
+    <li><a href="trade_reward.html"><i class="fa-solid fa-ticket icon"></i> Add trade</a></li>
+    <li><a href="trade_list.html"><i class="fa-solid fa-ticket icon"></i> trade list</a></li>
+    <li><a href="user_list.html"><i class='bx bxs-user icon'></i> User list</a></li>
+    <li><a href="emp_list.html"><i class='bx bxs-id-card icon'></i> Employee list</a></li>
+    <li><a href="trade_history.html" ><i class="fa-solid fa-ticket icon"></i> Trade Reward List</a></li>
+  </ul>
+</section>
   <section id="content" style="margin-left:270px;">
     <nav>
       <i class="bx bx-menu toggle-sidebar"></i>
@@ -60,7 +111,7 @@
               <th>Genre</th>
               <th>Duration</th>
               <th>Price</th>
-              <th>Action</th>
+              <th>Theater</th> <th>Action</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -69,9 +120,8 @@
     </main>
   </section>
 
-  <!-- Edit Movie Modal -->
   <div id="editModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#00000099; justify-content:center; align-items:center; z-index:1000;">
-    <div style="background:#00000100; padding:20px; border-radius:8px; width:90%; max-width:500px; position:relative;">
+    <div style="background:#07043a; padding:20px; border-radius:8px; width:90%; max-width:500px; position:relative;">
       <h2>Edit Movie</h2>
       <label>Name</label>
       <input id="editName" type="text" style="width:100%; padding:8px;" />
@@ -97,20 +147,16 @@
       <label>Price</label>
       <input id="editPrice" type="number" style="width:100%; padding:8px;" />
 
-      <label>Theaters</label>
-      <input id="editTheaters" type="number" style="width:100%; padding:8px;" />
-
-      <label>Seat</label>
+      <label>Theater (ID/Name)</label> <input id="editTheaters" type="text" style="width:100%; padding:8px;" /> <label>Seat</label>
       <input id="editSeat" type="number" style="width:100%; padding:8px;" />
 
-      <div style="margin-top:12px; text-align:right;">
+      <div style="margin-top:20px; text-align:right;">
         <button id="cancelEdit">Cancel</button>
-        <button id="saveEdit" style="background:#28a745; color:white; padding:8px 16px;">Save</button>
+        <button id="saveEdit">Save</button>
       </div>
     </div>
   </div>
 
-  <!-- SCRIPT -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const movieTableBody = document.querySelector('#movieTable tbody');
@@ -124,7 +170,7 @@
       const editPosterURL = document.getElementById('editPosterURL');
       const editStatus = document.getElementById('editStatus');
       const editPrice = document.getElementById('editPrice');
-      const editTheaters = document.getElementById('editTheaters');
+      const editTheaters = document.getElementById('editTheaters'); // Renamed from editTheaters (if it was an array of IDs)
       const editSeat = document.getElementById('editSeat');
       const cancelEdit = document.getElementById('cancelEdit');
       const saveEdit = document.getElementById('saveEdit');
@@ -138,23 +184,32 @@
       function formatDate(dateStr) {
         const d = new Date(dateStr);
         if (isNaN(d)) return dateStr;
-        return d.toLocaleDateString('th-TH');
+        return d.toLocaleDateString('th-TH'); // Using Thai locale for date
       }
 
       async function fetchData() {
         try {
           const res = await fetch('http://localhost:8000/movie');
+          if (!res.ok) {
+              const errorText = await res.text();
+              throw new Error(`HTTP error! status: ${res.status}, message: ${errorText}`);
+          }
           const movies = await res.json();
 
-          movieTableBody.innerHTML = '';
+          movieTableBody.innerHTML = ''; // Clear existing rows
+          if (movies.length === 0) {
+              movieTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No movies found.</td></tr>';
+              return;
+          }
+
           movies.forEach(movie => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-              <td>${movie.mv_name}</td>
-              <td>${movie.genre}</td>
-              <td>${movie.duration} min</td>
-              <td>${movie.price || '-'}</td>
-              <td>
+              <td>${movie.mv_name || '-'}</td>
+              <td>${movie.genre || '-'}</td>
+              <td>${movie.duration ? movie.duration + ' min' : '-'}</td>
+              <td>${movie.price != null ? movie.price.toFixed(2) : '-'}</td>
+              <td>${movie.theaters || '-'}</td> <td>
                 <button class="edit-btn" data-id="${movie.mv_id}">Edit</button>
                 <button class="delete-btn" data-id="${movie.mv_id}">Delete</button>
               </td>
@@ -163,7 +218,7 @@
           });
         } catch (error) {
           console.error('Error loading data:', error);
-          movieTableBody.innerHTML = `<tr><td colspan="5">❌ Failed to load data</td></tr>`;
+          movieTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">❌ Failed to load movie data: ${error.message}</td></tr>`;
         }
       }
 
@@ -175,12 +230,15 @@
             });
             if (res.ok) {
               alert('✅ Movie deleted');
-              fetchData();
+              fetchData(); // Refresh the list
             } else {
-              alert('❌ Delete failed');
+              const errorText = await res.text();
+              console.error('Delete failed:', res.status, errorText);
+              alert('❌ Delete failed: ' + errorText);
             }
           } catch (err) {
-            alert('❌ Delete error');
+            console.error('Delete error:', err);
+            alert('❌ Delete error: ' + err.message);
           }
         }
       }
@@ -188,6 +246,10 @@
       async function openEditDialog(id) {
         try {
           const res = await fetch(`http://localhost:8000/movie/${id}`);
+          if (!res.ok) {
+              const errorText = await res.text();
+              throw new Error(`HTTP error! status: ${res.status}, message: ${errorText}`);
+          }
           const movie = await res.json();
           currentEditId = id;
 
@@ -196,33 +258,46 @@
           editDuration.value = movie.duration || 0;
           editGenre.value = movie.genre || '';
           if (movie.release_date) {
-            editReleaseDate.value = movie.release_date.split('T')[0]; // yyyy-mm-dd
+            // Ensure date is in YYYY-MM-DD for input type="date"
+            editReleaseDate.value = movie.release_date.split('T')[0];
           } else {
             editReleaseDate.value = '';
           }
           editPosterURL.value = movie.posterURL || '';
           editStatus.value = movie.status || '';
           editPrice.value = movie.price || 0;
-          editTheaters.value = movie.theaters || 0;
+          editTheaters.value = movie.theaters || ''; // Assign the 'theaters' value
           editSeat.value = movie.seat || 0;
 
-          editModal.style.display = 'flex';
+          editModal.style.display = 'flex'; // Show the modal
         } catch (err) {
-          alert("❌ Error fetching movie");
+          console.error("Error fetching movie for edit:", err);
+          alert("❌ Error fetching movie data for editing: " + err.message);
         }
       }
 
       async function saveEditedMovie() {
+        // Basic validation
+        if (!editName.value || !editDuration.value || !editGenre.value || !editPrice.value || !editTheaters.value || !editSeat.value) {
+            alert('Please fill in all required fields: Name, Duration, Genre, Price, Theater, Seat.');
+            return;
+        }
+        if (isNaN(parseInt(editDuration.value)) || isNaN(parseFloat(editPrice.value)) || isNaN(parseInt(editTheaters.value)) || isNaN(parseInt(editSeat.value))) {
+             alert('Duration, Price, Theater (ID), and Seat must be valid numbers.');
+             return;
+        }
+
+
         const updated = {
           mv_name: editName.value,
           description: editDescription.value,
           duration: parseInt(editDuration.value),
           genre: editGenre.value,
-          release_date: editReleaseDate.value,
+          release_date: editReleaseDate.value, // Already YYYY-MM-DD or empty
           posterURL: editPosterURL.value,
           status: editStatus.value,
-          price: parseInt(editPrice.value),
-          theaters: parseInt(editTheaters.value),
+          price: parseFloat(editPrice.value), // Use parseFloat for price
+          theaters: editTheaters.value, // Send the value as is (string or number ID)
           seat: parseInt(editSeat.value)
         };
 
@@ -235,13 +310,16 @@
 
           if (res.ok) {
             alert('✅ Updated successfully!');
-            editModal.style.display = 'none';
-            fetchData();
+            editModal.style.display = 'none'; // Hide the modal
+            fetchData(); // Refresh the list
           } else {
-            alert('❌ Failed to update');
+            const errorText = await res.text();
+            console.error('Failed to update:', res.status, errorText);
+            alert('❌ Failed to update: ' + errorText);
           }
         } catch (err) {
-          alert("❌ Update error");
+          console.error("Update error:", err);
+          alert("❌ Update error: " + err.message);
         }
       }
 
@@ -262,7 +340,7 @@
         }
       });
 
-      fetchData();
+      fetchData(); // Initial data load
     });
   </script>
 </body>

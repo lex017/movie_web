@@ -718,7 +718,10 @@ main {
       background-color: #e04343;
     }
 
-
+#ticketRevenueChart {
+    width: 100%; /* Or a fixed width like 600px */
+    height: 300px; /* Or a fixed height */
+}
 
 
 

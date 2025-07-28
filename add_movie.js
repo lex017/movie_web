@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           theaters_id: theater,
           show_date: releaseDate,
           showt_ime: time,
-          availableSeat: availableSeat
+  
         };
 
         const showtimeRes = await fetch("http://localhost:8000/showtime", {
