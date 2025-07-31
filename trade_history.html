@@ -1,177 +1,222 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="lo">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Trade Reward List - Theater Admin</title>
+  <title>ລາຍການແລກປ່ຽນລາງວັນ - ແອັດມິນໂຮງໜັງ</title>
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="/main.css" />
+  <style>
+    /* CSS ສໍາລັບປຸ່ມການກະທໍາ */
+    .action-buttons button {
+      margin-right: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      color: white;
+    }
+
+    .edit-btn {
+      background-color: #3498db;
+    }
+
+    .delete-btn {
+      background-color: #e74c3c;
+    }
+
+    /* CSS ສໍາລັບປຸ່ມເພີ່ມລາງວັນ */
+    #btnAddTrade {
+      background-color: #df1515;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    #btnAddTrade:hover {
+      background-color: #27ae60;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
-<section id="sidebar">
-  <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> Theater Admin</a>
-  <ul class="side-menu">
-    <li><a href="mainpage.html" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
-    <li class="divider" data-text="Movies Management">Movies Management</li>
-    <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> Add Movie</a></li>
-    <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> Movie List</a></li>
-    <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> Verify</a></li>
-    <li><a href="trade_reward.html"><i class="fa-solid fa-ticket icon"></i> Add trade</a></li>
-    <li><a href="trade_list.html"><i class="fa-solid fa-ticket icon"></i> trade list</a></li>
-    <li><a href="user_list.html"><i class='bx bxs-user icon'></i> User list</a></li>
-    <li><a href="emp_list.html"><i class='bx bxs-id-card icon'></i> Employee list</a></li>
-    <li><a href="trade_history.html" ><i class="fa-solid fa-ticket icon"></i> Trade Reward List</a></li>
-  </ul>
-</section>
-<!-- SIDEBAR -->
+  <section id="sidebar">
+    <a href="mainpage.html" class="brand"><i class='bx bxs-film icon'></i> ແອັດມິນໂຮງໜັງ</a>
+    <ul class="side-menu">
+      <li><a href="mainpage.html"><i class='bx bxs-dashboard icon'></i> ແຜງຄວບຄຸມ</a></li>
+      <li class="divider" data-text="ການຈັດການຮູບເງົາ">ການຈັດການຮູບເງົາ</li>
+      <li><a href="add_movie.html"><i class='bx bxs-plus-circle icon'></i> ເພີ່ມຮູບເງົາ</a></li>
+      <li><a href="movie_list.html"><i class='bx bxs-film icon'></i> ລາຍການຮູບເງົາ</a></li>
+      <li><a href="ticket_verify.html"><i class="fa-solid fa-ticket icon"></i> ກວດສອບປີ້</a></li>
+      <li><a href="trade_reward.html"><i class="fa-solid fa-ticket icon"></i> ເພີ່ມລາງວັນ</a></li>
+      <li><a href="trade_list.html"><i class="fa-solid fa-ticket icon"></i> ລາຍການລາງວັນ</a></li>
+      <li><a href="user_list.html"><i class='bx bxs-user icon'></i> ລາຍຊື່ຜູ້ໃຊ້</a></li>
+      <li><a href="emp_list.html"><i class='bx bxs-id-card icon'></i> ລາຍຊື່ພະນັກງານ</a></li>
+      <li><a href="trade_history.html" class="active"><i class="fa-solid fa-ticket icon"></i> ລາຍການແລກປ່ຽນລາງວັນ</a></li>
+    </ul>
+  </section>
+  <section id="content" style="margin-left:270px;">
+    <nav>
+      <i class="bx bx-menu toggle-sidebar"></i>
+      <a href="#" class="nav-link">
+        <i class="bx bxs-bell icon"></i>
+        <span class="badge" id="notification-badge">0</span>
+      </a>
+      <a href="chat.html" class="nav-link">
+        <i class="bx bxs-message-square-dots icon"></i>
+        <span class="badge">8</span>
+      </a>
+      <span class="divider"></span>
+      <div class="profile">
+        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9" alt="" />
+        <ul class="profile-link">
+          <li><a href="#"><i class="bx bxs-user-circle icon"></i> ໂປຣໄຟລ໌</a></li>
+          <li><a href="#"><i class="bx bxs-cog"></i> ຕັ້ງຄ່າ</a></li>
+          <li><a href="login.html"><i class="bx bxs-log-out-circle"></i> ອອກຈາກລະບົບ</a></li>
+        </ul>
+      </div>
+    </nav>
 
-<!-- CONTENT -->
-<section id="content" style="margin-left:270px;">
-  <nav>
-    <i class="bx bx-menu toggle-sidebar"></i>
-    <a href="#" class="nav-link">
-      <i class="bx bxs-bell icon"></i>
-      <span class="badge" id="notification-badge">0</span>
-    </a>
-    <a href="chat.html" class="nav-link">
-      <i class="bx bxs-message-square-dots icon"></i>
-      <span class="badge">8</span>
-    </a>
-    <span class="divider"></span>
-    <div class="profile">
-      <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9" alt="" />
-      <ul class="profile-link">
-        <li><a href="#"><i class="bx bxs-user-circle icon"></i> Profile</a></li>
-        <li><a href="#"><i class="bx bxs-cog"></i> Settings</a></li>
-        <li><a href="login.html"><i class="bx bxs-log-out-circle"></i> Logout</a></li>
-      </ul>
-    </div>
-  </nav>
+    <main>
+      <h1 class="title">ລາຍການແລກປ່ຽນລາງວັນ</h1>
+      <button class="add-movie-btn" id="btnAddTrade"><i class="bx bx-plus"></i> ເພີ່ມລາງວັນໃໝ່</button>
+      <div class="tablecontainer">
+        <table id="tradeRewardTable">
+          <thead>
+            <tr>
+              <th>ລະຫັດ</th>
+              <th>ວັນທີ</th>
+              <th>ສະຖານະ</th>
+              <th>ຊື່ລາງວັນ</th>
+              <th>ປະເພດລາງວັນ</th>
+              <th>ຄະແນນ</th>
+              <th>ຊື່ຜູ້ໃຊ້</th>
+              
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </main>
+  </section>
 
-  <main>
-    <h1 class="title">Trade Reward List</h1>
-    <button class="add-movie-btn" id="btnAddTrade"><i class="bx bx-plus"></i> Add New Trade Reward</button>
-    <div class="tablecontainer">
-      <table id="tradeRewardTable">
-        <thead>
-          <tr>
-            <th>Trade ID</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Reward Name</th>
-            <th>Reward Type</th>
-            <th>Points</th>
-            <th>User Name</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </main>
-</section>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tradeRewardTableBody = document.querySelector('#tradeRewardTable tbody');
+      const btnAddTrade = document.getElementById('btnAddTrade');
 
-<!-- SCRIPT -->
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const tradeRewardTableBody = document.querySelector('#tradeRewardTable tbody');
-    const btnAddTrade = document.getElementById('btnAddTrade');
+      // ປ່ຽນເສັ້ນທາງເມື່ອກົດປຸ່ມເພີ່ມ
+      btnAddTrade.addEventListener('click', () => {
+        window.location.href = 'trade_reward.html';
+      });
 
-    btnAddTrade.addEventListener('click', () => {
-      window.location.href = 'trade_add.html';
-    });
+      // ເກັບຊື່ຜູ້ໃຊ້ໄວ້ໃນ cache ເພື່ອຫຼຸດການຮ້ອງຂໍ API
+      const userNameCache = {};
 
-    // Cache user names to reduce API calls
-    const userNameCache = {};
-
-    // Fetch user name by user ID, with caching
-   async function fetchUserName(u_id) {
-  if (userNameCache[u_id]) return userNameCache[u_id];
-  try {
-    const res = await fetch(`http://localhost:8000/user/${u_id}`);
-    if (!res.ok) throw new Error('User not found');
-    const user = await res.json();
-    const name = user.u_name || `User#${u_id}`; // เปลี่ยนตรงนี้เป็น u_name
-    userNameCache[u_id] = name;
-    return name;
-  } catch {
-    return `User#${u_id}`;
-  }
-}
-
-
-    async function fetchTradeRewards() {
-      try {
-        const res = await fetch('http://localhost:8000/tradereward');
-        if (!res.ok) throw new Error('Failed to fetch trade rewards');
-        const trades = await res.json();
-
-        tradeRewardTableBody.innerHTML = '';
-
-        for (const trade of trades) {
-          const userName = await fetchUserName(trade.u_id);
-
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${trade.trade_id}</td>
-            <td>${new Date(trade.trade_datetime).toLocaleString()}</td>
-            <td>${trade.status}</td>
-            <td>${trade.re_name}</td>
-            <td>${trade.re_type}</td>
-            <td>${trade.point}</td>
-            <td>${userName}</td>
-           
-          `;
-          tradeRewardTableBody.appendChild(tr);
-        }
-      } catch (error) {
-        console.error('Error loading trade rewards:', error);
-        tradeRewardTableBody.innerHTML = `<tr><td colspan="8">❌ Failed to load data</td></tr>`;
-      }
-    }
-
-    async function deleteTradeReward(id) {
-      if (confirm('Are you sure you want to delete this trade reward?')) {
+      // ດຶງຊື່ຜູ້ໃຊ້ດ້ວຍລະຫັດ, ພ້ອມການ cache
+      async function fetchUserName(u_id) {
+        if (userNameCache[u_id]) return userNameCache[u_id];
         try {
-          const res = await fetch(`http://localhost:8000/tradereward/${id}`, {
-            method: 'DELETE',
-          });
-          if (res.ok) {
-            alert('✅ Trade reward deleted');
-            fetchTradeRewards();
-          } else {
-            alert('❌ Delete failed');
-          }
-        } catch {
-          alert('❌ Delete error');
+          const res = await fetch(`http://localhost:8000/user/${u_id}`);
+          if (!res.ok) throw new Error(`ບໍ່ພົບຜູ້ໃຊ້ທີ່ມີລະຫັດ: ${u_id}`);
+          const user = await res.json();
+          const name = user.u_name || `ຜູ້ໃຊ້#${u_id}`;
+          userNameCache[u_id] = name;
+          return name;
+        } catch (error) {
+          console.error('ຂໍ້ຜິດພາດໃນການດຶງຊື່ຜູ້ໃຊ້:', error);
+          return `ຜູ້ໃຊ້#${u_id}`;
         }
       }
-    }
 
-    async function openEditDialog(id) {
-      // สำหรับตัวอย่างนี้ สมมติว่าไม่มี modal edit แบบละเอียด
-      alert(`Edit function not implemented yet for trade reward ID: ${id}`);
-    }
+      // ດຶງຂໍ້ມູນລາງວັນທີ່ແລກ
+      async function fetchTradeRewards() {
+        try {
+          const res = await fetch('http://localhost:8000/tradereward');
+          if (!res.ok) throw new Error('ບໍ່ສາມາດດຶງລາງວັນທີ່ແລກໄດ້');
+          const trades = await res.json();
 
-    tradeRewardTableBody.addEventListener('click', (e) => {
-      const target = e.target;
-      if (target.classList.contains('edit-btn')) {
-        const id = target.getAttribute('data-id');
-        openEditDialog(id);
-      } else if (target.classList.contains('delete-btn')) {
-        const id = target.getAttribute('data-id');
-        deleteTradeReward(id);
+          tradeRewardTableBody.innerHTML = '';
+
+          if (trades.length === 0) {
+            tradeRewardTableBody.innerHTML = `<tr><td colspan="8" style="text-align:center;">ບໍ່ມີຂໍ້ມູນລາງວັນທີ່ແລກປ່ຽນ</td></tr>`;
+            return;
+          }
+
+          for (const trade of trades) {
+            const userName = await fetchUserName(trade.u_id);
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${trade.trade_id}</td>
+              <td>${new Date(trade.trade_datetime).toLocaleString()}</td>
+              <td>${trade.status}</td>
+              <td>${trade.re_name}</td>
+              <td>${trade.re_type}</td>
+              <td>${trade.point}</td>
+              <td>${userName}</td>
+              
+            `;
+            tradeRewardTableBody.appendChild(tr);
+          }
+        } catch (error) {
+          console.error('ຂໍ້ຜິດພາດໃນການໂຫຼດລາຍການລາງວັນ:', error);
+          tradeRewardTableBody.innerHTML = `<tr><td colspan="8" style="color:red; text-align:center;">❌ ບໍ່ສາມາດໂຫຼດຂໍ້ມູນໄດ້</td></tr>`;
+        }
       }
-    });
 
-    fetchTradeRewards();
-  });
-</script>
+      // ລຶບລາງວັນທີ່ແລກ
+      async function deleteTradeReward(id) {
+        if (confirm('ທ່ານຕ້ອງການລຶບລາຍການນີ້ແທ້ບໍ?')) {
+          try {
+            const res = await fetch(`http://localhost:8000/tradereward/${id}`, {
+              method: 'DELETE',
+            });
+            if (res.ok) {
+              alert('✅ ລຶບລາຍການສຳເລັດແລ້ວ');
+              fetchTradeRewards(); // ໂຫຼດຂໍ້ມູນໃໝ່ຫຼັງຈາກລຶບ
+            } else {
+              alert('❌ ລຶບລົ້ມເຫຼວ');
+            }
+          } catch (error) {
+            console.error('ຂໍ້ຜິດພາດໃນການລຶບ:', error);
+            alert('❌ ຂໍ້ຜິດພາດໃນການລຶບ');
+          }
+        }
+      }
+
+      // ເປີດກ່ອງແກ້ໄຂ
+      function openEditDialog(id) {
+        // ນີ້ເປັນຕົວຢ່າງສຳລັບຟັງຊັນທີ່ຊັບຊ້ອນກວ່າ ຫຼື ແບບຟອມ modal
+        alert(`ແກ້ໄຂລາຍການ ID: ${id}. ຟັງຊັນນີ້ຈະເປີດໜ້າຕ່າງແກ້ໄຂໃນອະນາຄົດ.`);
+      }
+
+      // ຈັດການເຫດການກົດປຸ່ມແກ້ໄຂ/ລຶບ
+      tradeRewardTableBody.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target.classList.contains('edit-btn')) {
+          const id = target.getAttribute('data-id');
+          openEditDialog(id);
+        } else if (target.classList.contains('delete-btn')) {
+          const id = target.getAttribute('data-id');
+          deleteTradeReward(id);
+        }
+      });
+
+      // ໂຫຼດລາຍການເມື່ອເປີດໜ້າ
+      fetchTradeRewards();
+    });
+  </script>
 
 </body>
-
 </html>
